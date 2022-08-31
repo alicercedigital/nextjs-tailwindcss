@@ -1,0 +1,103 @@
+{
+  // additional eslint rules and configurations
+  // the order matters
+  "extends": ["airbnb-base", "plugin:@next/next/recommended"],
+
+  // rules only for js files
+  "rules": {
+    "consistent-return": "off",
+    "arrow-body-style": ["error", "always"],
+
+    // prettier create a new empty line in the end of file by design
+    // this rules is just to not conflict with prettier and allow the new line
+    "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
+
+    // allow to make each prop of a React component in a new line if you want
+    // https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-max-props-per-line.md
+    "react/jsx-max-props-per-line": [2, { "when": "multiline" }],
+
+    "no-underscore-dangle": "off",
+
+    // this rule is to make a tailwind plugin be used in devDependencies
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["tailwind.config.js"],
+        "peerDependencies": true
+      }
+    ]
+  },
+
+  // configurations that overrides the above configuration
+  "overrides": [
+    {
+      // defining that all configuration in this block
+      // only applies to ts and tsx files
+      "files": ["**/*.ts", "**/*.tsx"],
+
+      // plugins to ts and tsx files
+      "plugins": ["@typescript-eslint"],
+
+      // additional eslint rules and configurations to ts and tsx files
+      // the order matters
+      "extends": [
+        "airbnb-typescript",
+        "next/core-web-vitals",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@next/next/recommended",
+        "prettier"
+      ],
+
+      // defining that eslint can read ts and tsx files
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      },
+
+      // rules only for tsx files
+      "rules": {
+        // ensure that imported types are specificed with "import type"
+        "@typescript-eslint/consistent-type-imports": "error",
+
+        // defining that you dont need spaces between class members
+        // https://eslint.org/docs/latest/rules/lines-between-class-members
+        "@typescript-eslint/lines-between-class-members": [
+          "error",
+          "always",
+          { "exceptAfterSingleLine": true }
+        ],
+
+        // defining that empty react components must be autoclosed in the same tag
+        // example: <div></div> will become like this: <div />
+        "react/self-closing-comp": [
+          "error",
+          {
+            "component": true,
+            "html": true
+          }
+        ],
+
+        // this force an specific order of imports
+        // this rule helps that same imports in different files looks the same
+        "import/order": [
+          "error",
+          {
+            "groups": ["builtin", "external", "internal"],
+            "pathGroups": [
+              {
+                "pattern": "react",
+                "group": "external",
+                "position": "before"
+              }
+            ],
+            "pathGroupsExcludedImportTypes": ["react"],
+            "alphabetize": {
+              "order": "asc",
+              "caseInsensitive": true
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+
